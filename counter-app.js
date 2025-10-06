@@ -18,6 +18,7 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
     return "counter-app";
   }
 
+  // Initializes properties with default values.
   constructor() {
     super();
     this.counter = 0;
@@ -41,7 +42,8 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
       :host {
             display: block; 
             padding: var(--ddd-spacing-4);
-            border: 1px solid var(--ddd-theme-default-potentialMidnight);
+            background-color: var(--ddd-theme-default-discoveryCoral);
+            border: 1px solid var(--ddd-theme-default-original87Pink);
             text-align: center;
         }
         
@@ -55,13 +57,13 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
         
         /* Conditional Colors */
         .default {
-            color: var(--ddd-theme-default-limestoneGray); 
+            color: var(--ddd-theme-default-potentialMidnight); 
         }
         .eighteen {
-            color: var(--ddd-theme-default-original87Yellow);
+            color: var(--ddd-theme-default-forestGreen);
         }
         .twenty-one {
-            color: var(--ddd-theme-default-jukeGreen);
+            color: var(--ddd-theme-default-original87Pink);
         }
         .limit {
             color: var(--ddd-theme-default-brickRed);
@@ -78,8 +80,8 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
         button {
             font-size: var(--ddd-font-size-h3);
             padding: var(--ddd-spacing-2) var(--ddd-spacing-6);
-            border: 2px solid var(--ddd-theme-default-potentialMidnight);
-            background-color: var(--ddd-theme-default-potentialMidnight);
+            border: 2px solid var(--ddd-theme-default-athertonViolet);
+            background-color: var(--ddd-theme-default-wonderPurple);
             color: var(--ddd-theme-default-isoWhite);
             cursor: pointer;
             border-radius: var(--ddd-radius-sm);
@@ -92,9 +94,9 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
         /* Hover / Focus States */
         button:hover,
         button:focus {
-            background-color: var(--ddd-theme-default-beastBlue);
-            border-color: var(--ddd-theme-default-beastBlue);
-            outline: none; /* remove default focus outline */
+            background-color: var(--ddd-theme-default-opportunityGreen);
+            border-color: var(--ddd-theme-default-inventOrange);
+            outline: none; 
         }
 
         /* Disabled State */
@@ -108,35 +110,55 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
     `];
   }
 
-  // Method to increment counter
+   /**
+   * Increments the counter property by one, as long as it does not exceed the 
+   * maximum allowed value (this.max).
+   */
   _increment() {
     if (this.counter < this.max) {
         this.counter++;
     }
   }
 
-  // Method to decrement counter
+  /**
+   * Decrements the counter property by one, as long as it does not drop below the 
+   * minimum allowed value (this.min).
+   */
   _decrement() {
     if (this.counter > this.min) {
         this.counter--;
     }
   }
 
-  // Determine CSS class based on counter value
+   /**
+   * Getter that returns the appropriate CSS class (as a string) based 
+   * on the current counter value. This is used to apply conditional color changes
+   * based on limits (min/max) and special numbers (18, 21).
+   * * @returns {string} The CSS class list for the counter display element.
+   */ 
   get _numberClass() {
+    // Min/max color
     if (this.counter === this.min || this.counter === this.max) {
-        return 'counter-display limit'; // min/max color
+        return 'counter-display limit';
     }
+    // 21 color
     if (this.counter === 21) {
-        return 'counter-display twenty-one'; // 21 color
+        return 'counter-display twenty-one';
     }
+    // 18 color
     if (this.counter === 18) {
-        return 'counter-display eighteen'; // 18 color
+        return 'counter-display eighteen';
     }
-    return 'counter-display default'; // default color
+    // Default color
+    return 'counter-display default';
   }
 
-  // Confetti effect method(s)
+   /**
+   * Lit lifecycle callback that runs after the element's properties have been updated.
+   * It specifically watches for changes to the 'counter' property to trigger the 
+   * confetti effect when the value hits 21.
+   * * @param {Map<string | number | symbol, unknown>} changedProperties - A Map of properties that were changed.
+   */
   updated(changedProperties) {
     if (super.updated) {
       super.updated(changedProperties);
@@ -147,6 +169,11 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
       }
     }
   }
+
+   /**
+   * Triggers the confetti effect by importing the required library 
+   * and setting the 'popped' attribute on the confetti container element in the Shadow DOM.
+   */
   makeItRain() {
     import("@haxtheweb/multiple-choice/lib/confetti-container.js").then(
       (module) => {
